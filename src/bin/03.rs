@@ -2,24 +2,11 @@ use regex::Regex;
 advent_of_code::solution!(3);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let re = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
+    let re = Regex::new(r"mul\(\d+,\d+\)").unwrap();
 
     let mults: Vec<&str> = re.find_iter(input).map(|m| m.as_str()).collect();
 
-    Some(
-        mults
-            .iter()
-            .map(|m| {
-                m.strip_prefix("mul(")
-                    .unwrap()
-                    .strip_suffix(")")
-                    .unwrap()
-                    .split(',')
-                    .map(|x| x.parse::<u32>().unwrap())
-                    .product::<u32>()
-            })
-            .sum(),
-    )
+    Some(mults.iter().map(|m| eval_mul(m)).sum())
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
@@ -33,27 +20,21 @@ pub fn part_two(input: &str) -> Option<u32> {
     for statement in mults {
         if statement.starts_with("don't") {
             doo = false;
-            continue;
-        }
-
-        if statement.starts_with("do") {
+        } else if statement.starts_with("do") {
             doo = true;
-            continue;
-        }
-
-        if doo {
-            res += statement
-                .strip_prefix("mul(")
-                .unwrap()
-                .strip_suffix(")")
-                .unwrap()
-                .split(",")
-                .map(|x| x.parse::<u32>().unwrap())
-                .product::<u32>();
+        } else if doo {
+            res += eval_mul(statement);
         }
     }
 
     Some(res)
+}
+
+fn eval_mul(statement: &str) -> u32 {
+    statement[4..statement.len() - 1]
+        .split(",")
+        .map(|x| x.parse::<u32>().unwrap())
+        .product::<u32>()
 }
 
 #[cfg(test)]
