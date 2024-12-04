@@ -43,7 +43,7 @@ fn is_safe(report: &[i32]) -> bool {
         .zip(report.iter().skip(1))
         .map(|(x, y)| x - y)
         .collect();
-    return x.iter().all(|x| (1..=3).contains(x)) || x.iter().all(|x| (-3..=-1).contains(x));
+    x.iter().all(|x| (1..=3).contains(x)) || x.iter().all(|x| (-3..=-1).contains(x))
 }
 
 #[cfg(test)]
