@@ -18,6 +18,16 @@ impl Vec2 {
     pub const WEST: Self = v(-1, 0);
 
     pub const DIRECTIONS: [Self; 4] = [Self::NORTH, Self::EAST, Self::SOUTH, Self::WEST];
+    pub const DIR_WITH_DIAGONALS: [Self; 8] = [
+        Self::NORTH,
+        v(-1, 1),
+        Self::EAST,
+        v(1, 1),
+        Self::SOUTH,
+        v(1, -1),
+        Self::WEST,
+        v(-1, -1),
+    ];
 
     pub const fn new(x: i64, y: i64) -> Self {
         Self { x, y }

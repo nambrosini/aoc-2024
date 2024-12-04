@@ -6,50 +6,39 @@ use advent_of_code::util::{
 
 advent_of_code::solution!(4);
 
-const GOAL: &str = "XMAS";
+const GOAL: &[char; 4] = &['X', 'M', 'A', 'S'];
 
-pub fn part_one(input: &str) -> Option<u32> {
+pub fn part_one(input: &str) -> Option<usize> {
     let grid: Grid<char> = Grid::parse(input);
 
-    let mut res = 0;
-    for (i, row) in grid.iter().enumerate() {
-        for (j, c) in row.iter().enumerate() {
-            if c != &'X' {
-                continue;
-            }
-
-            res += find_all_xmas(&grid, i, j);
-        }
-    }
-    Some(res)
+    Some(
+        grid.iter()
+            .enumerate()
+            .map(|(i, row)| {
+                row.iter()
+                    .enumerate()
+                    .filter(|&(_, &c)| c == 'X')
+                    .map(|(j, _)| find_all_xmas(&grid, i, j))
+                    .sum::<usize>()
+            })
+            .sum(),
+    )
 }
 
-fn find_all_xmas(input: &Grid<char>, i: usize, j: usize) -> u32 {
-    let mut sum = 0;
-
-    for x in -1..=1 {
-        for y in -1..=1 {
-            if x == 0 && y == 0 {
-                continue;
-            }
-            sum += search_xmas(input, i as i64, j as i64, (x, y)) as u32;
-        }
-    }
-
-    sum
+fn find_all_xmas(grid: &Grid<char>, i: usize, j: usize) -> usize {
+    Vec2::DIR_WITH_DIAGONALS
+        .iter()
+        .filter(|dir| search_xmas(grid, i as i64, j as i64, dir))
+        .count()
 }
 
-fn search_xmas(grid: &Grid<char>, x: i64, y: i64, inc: (i64, i64)) -> bool {
-    if !grid.inbound(&Vec2::new(x + inc.0 * 3, y + inc.1 * 3)) {
+fn search_xmas(grid: &Grid<char>, x: i64, y: i64, inc: &Vec2) -> bool {
+    if !grid.inbound(&Vec2::new(x + inc.x * 3, y + inc.y * 3)) {
         return false;
     }
-    let mut res = String::new();
-
-    for i in 0..4 {
-        res.push(grid[(x + inc.0 * i) as usize][(y + inc.1 * i) as usize]);
-    }
-
-    res == GOAL
+    GOAL.iter().enumerate().all(|(i, &goal)| {
+        grid[(x + inc.x * i as i64) as usize][(y + inc.y * i as i64) as usize] == goal
+    })
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
