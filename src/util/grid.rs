@@ -8,8 +8,8 @@ pub trait Print {
     fn string(&self) -> String;
 }
 
-pub trait Contains<T> {
-    fn contains(&self, point: T) -> bool;
+pub trait Inbound<T> {
+    fn inbound(&self, point: T) -> bool;
 }
 
 pub trait Parse {
@@ -42,8 +42,8 @@ where
     }
 }
 
-impl<T> Contains<&Vec2> for Grid<T> {
-    fn contains(&self, pos: &Vec2) -> bool {
+impl<T> Inbound<&Vec2> for Grid<T> {
+    fn inbound(&self, pos: &Vec2) -> bool {
         pos.x >= 0 && pos.x < self.len() as i64 && pos.y >= 0 && pos.y < self[0].len() as i64
     }
 }

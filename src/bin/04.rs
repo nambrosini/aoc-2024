@@ -1,28 +1,30 @@
+use advent_of_code::util::{
+    grid::{Grid, Inbound, Parse},
+    position::Vec2,
+    vecs::SortedVec,
+};
+
 advent_of_code::solution!(4);
 
 const GOAL: &str = "XMAS";
-const GOAL_2: &str = "MAS";
 
-fn parse(input: &str) -> Vec<Vec<char>> {
-    input.lines().map(|l| l.chars().collect()).collect()
-}
 pub fn part_one(input: &str) -> Option<u32> {
-    let input = parse(input);
+    let grid: Grid<char> = Grid::parse(input);
 
     let mut res = 0;
-    for (i, row) in input.iter().enumerate() {
+    for (i, row) in grid.iter().enumerate() {
         for (j, c) in row.iter().enumerate() {
             if c != &'X' {
                 continue;
             }
 
-            res += find_all_xmas(&input, i, j);
+            res += find_all_xmas(&grid, i, j);
         }
     }
     Some(res)
 }
 
-fn find_all_xmas(input: &[Vec<char>], i: usize, j: usize) -> u32 {
+fn find_all_xmas(input: &Grid<char>, i: usize, j: usize) -> u32 {
     let mut sum = 0;
 
     for x in -1..=1 {
@@ -30,82 +32,57 @@ fn find_all_xmas(input: &[Vec<char>], i: usize, j: usize) -> u32 {
             if x == 0 && y == 0 {
                 continue;
             }
-            sum += search_xmas(input, i as i32, j as i32, (x, y)) as u32;
+            sum += search_xmas(input, i as i64, j as i64, (x, y)) as u32;
         }
     }
 
     sum
 }
 
-fn search_xmas(input: &[Vec<char>], x: i32, y: i32, inc: (i32, i32)) -> bool {
+fn search_xmas(grid: &Grid<char>, x: i64, y: i64, inc: (i64, i64)) -> bool {
+    if !grid.inbound(&Vec2::new(x + inc.0 * 3, y + inc.1 * 3)) {
+        return false;
+    }
     let mut res = String::new();
 
     for i in 0..4 {
-        if let Some(row) = input.get((x + inc.0 * i) as usize) {
-            if let Some(c) = row.get((y + inc.1 * i) as usize) {
-                res.push(*c);
-            }
-        }
+        res.push(grid[(x + inc.0 * i) as usize][(y + inc.1 * i) as usize]);
     }
 
     res == GOAL
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let input = parse(input);
+    let grid = Grid::parse(input);
 
     let mut res = 0;
-    for (i, row) in input.iter().enumerate() {
-        if i == 0 {
+    for (i, row) in grid.iter().enumerate().skip(1) {
+        if i == grid.len() - 1 {
             continue;
         }
-        for (j, c) in row.iter().enumerate() {
-            if j == 0 {
+        for (j, c) in row.iter().enumerate().skip(1) {
+            if j == grid.len() - 1 || c != &'A' {
                 continue;
             }
-            if c != &'A' {
-                continue;
-            }
-            res += find_all_x_mas(&input, i, j);
+            res += find_all_x_mas(&grid, i, j);
         }
     }
     Some(res)
 }
 
-fn find_all_x_mas(input: &[Vec<char>], i: usize, j: usize) -> u32 {
-    println!("{}, {}", i, j);
-    let mut res = String::new();
-    let mut res1 = String::new();
+fn find_all_x_mas(grid: &Grid<char>, i: usize, j: usize) -> u32 {
+    let mut res = SortedVec::new();
+    let mut res1 = SortedVec::new();
     for k in -1..=1 {
-        if let Some(c) = get(input, (i as i32 + k) as usize, (j as i32 + k) as usize) {
-            res.push(c);
-        } else {
-            return 0;
-        }
-        if let Some(c) = get(input, (i as i32 + k) as usize, (j as i32 - k) as usize) {
-            res1.push(c);
-        } else {
-            return 0;
-        }
+        res.push(grid[(i as i64 + k) as usize][(j as i64 + k) as usize]);
+        res1.push(grid[(i as i64 + k) as usize][(j as i64 - k) as usize]);
     }
 
-    println!("\t{}", res);
-    println!("\t{}", res1);
-
-    if (res == GOAL_2 || res.chars().rev().collect::<String>() == GOAL_2)
-        && (res1 == GOAL_2 || res1.chars().rev().collect::<String>() == GOAL_2)
-    {
+    if res == res1 {
         return 1;
     }
 
     0
-}
-
-fn get(input: &[Vec<char>], i: usize, j: usize) -> Option<char> {
-    if let Some(row) = input.get(i) {
-        return row.get(j).copied();
-    }
-    None
 }
 
 #[cfg(test)]
