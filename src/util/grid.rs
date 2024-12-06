@@ -8,12 +8,31 @@ pub trait Print {
     fn string(&self) -> String;
 }
 
+pub trait Find<T> {
+    fn find(&self, value: T) -> Vec2;
+}
+
 pub trait Inbound<T> {
     fn inbound(&self, point: T) -> bool;
 }
 
 pub trait Parse {
     fn parse(input: &str) -> Self;
+}
+
+impl<T> Find<T> for Grid<T>
+where
+    T: Eq,
+{
+    fn find(&self, value: T) -> Vec2 {
+        for (i, row) in self.iter().enumerate() {
+            if let Some(j) = row.iter().position(|e| e == &value) {
+                return Vec2::from_usize(i, j);
+            }
+        }
+
+        unreachable!()
+    }
 }
 
 impl<T> Print for Grid<T>

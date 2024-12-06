@@ -37,6 +37,10 @@ impl Vec2 {
         self.x.abs() + self.y.abs()
     }
 
+    pub const fn from_usize(x: usize, y: usize) -> Self {
+        Vec2::new(x as i64, y as i64)
+    }
+
     pub fn x(&self) -> usize {
         self.x as usize
     }
