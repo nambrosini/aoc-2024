@@ -1,9 +1,5 @@
 advent_of_code::solution!(7);
 
-use std::collections::HashSet;
-
-use itertools::{repeat_n, Itertools};
-
 fn parse(input: &str) -> Vec<(i64, Vec<i64>)> {
     input
         .lines()
@@ -20,70 +16,67 @@ fn parse(input: &str) -> Vec<(i64, Vec<i64>)> {
         })
         .collect()
 }
+
 pub fn part_one(input: &str) -> Option<i64> {
     let input = parse(input);
-    let operators = ['+', '*'];
-    let mut sum = 0;
 
-    'outer: for (target, nums) in input {
-        let n = nums.len();
-        let mut combi: HashSet<Vec<&char>> = repeat_n(operators.iter(), n - 1)
-            .multi_cartesian_product()
-            .collect();
-        for c in operators.iter().combinations(n - 1) {
-            combi.insert(c);
-        }
-        for ops in combi {
-            let mut res = nums[0];
-            for i in 1..n {
-                match ops[i - 1] {
-                    '*' => res *= nums[i],
-                    '+' => res += nums[i],
-                    _ => unreachable!(),
-                }
-            }
-            if res == target {
-                sum += res;
-                continue 'outer;
-            }
+    let mut sum = 0;
+    for (target, nums) in input {
+        if recurse_part1(nums[0], 1, &nums, '+', target)
+            || recurse_part1(nums[0], 1, &nums, '*', target)
+        {
+            sum += target;
         }
     }
 
     Some(sum)
 }
 
+fn recurse_part1(start: i64, index: usize, nums: &[i64], op: char, target: i64) -> bool {
+    let res = match op {
+        '+' => start + nums[index],
+        '*' => start * nums[index],
+        _ => unreachable!(),
+    };
+
+    if index == nums.len() - 1 {
+        return res == target;
+    }
+
+    recurse_part1(res, index + 1, nums, '+', target)
+        || recurse_part1(res, index + 1, nums, '*', target)
+}
+
 pub fn part_two(input: &str) -> Option<i64> {
     let input = parse(input);
-    let operators = ["+", "*", "||"];
     let mut sum = 0;
-
-    'outer: for (target, nums) in input {
-        let n = nums.len();
-        let mut combi: HashSet<Vec<&&str>> = repeat_n(operators.iter(), n - 1)
-            .multi_cartesian_product()
-            .collect();
-        for c in operators.iter().combinations(n - 1) {
-            combi.insert(c);
-        }
-        // let combi = operators.iter().permutations(n - 1);
-        for ops in combi {
-            let mut res = nums[0];
-            for i in 1..n {
-                match *ops[i - 1] {
-                    "*" => res *= nums[i],
-                    "+" => res += nums[i],
-                    "||" => res = res * 10i64.pow((nums[i] as f64).log10() as u32 + 1) + nums[i],
-                    _ => unreachable!(),
-                }
-            }
-            if res == target {
-                sum += res;
-                continue 'outer;
-            }
+    for (target, nums) in input {
+        if recurse_part2(nums[0], 1, &nums, '+', target)
+            || recurse_part2(nums[0], 1, &nums, '*', target)
+            || recurse_part2(nums[0], 1, &nums, '|', target)
+        {
+            sum += target;
         }
     }
 
     Some(sum)
+}
+
+fn recurse_part2(start: i64, index: usize, nums: &[i64], op: char, target: i64) -> bool {
+    let res = match op {
+        '+' => start + nums[index],
+        '*' => start * nums[index],
+        '|' => start * 10i64.pow((nums[index] as f64).log10() as u32 + 1) + nums[index],
+        _ => unreachable!(),
+    };
+
+    if index == nums.len() - 1 {
+        return res == target;
+    }
+
+    recurse_part2(res, index + 1, nums, '+', target)
+        || recurse_part2(res, index + 1, nums, '*', target)
+        || recurse_part2(res, index + 1, nums, '|', target)
 }
 
 #[cfg(test)]
