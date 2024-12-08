@@ -52,6 +52,13 @@ impl Vec2 {
     pub fn distance(&self, other: &Self) -> u64 {
         (self.x - other.x).unsigned_abs() + (self.y - other.y).unsigned_abs()
     }
+
+    pub fn distance_2d(&self, other: &Self) -> Self {
+        Self {
+            x: other.x - self.x,
+            y: other.y - self.y,
+        }
+    }
 }
 
 impl FromStr for Vec2 {

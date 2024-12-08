@@ -10,6 +10,7 @@ pub trait Print {
 
 pub trait Find<T> {
     fn find(&self, value: T) -> Vec2;
+    fn find_all(&self, value: T) -> Vec<Vec2>;
 }
 
 pub trait Inbound<T> {
@@ -32,6 +33,18 @@ where
         }
 
         unreachable!()
+    }
+
+    fn find_all(&self, value: T) -> Vec<Vec2> {
+        let mut res = Vec::new();
+        for (i, row) in self.iter().enumerate() {
+            for (j, e) in row.iter().enumerate() {
+                if e == &value {
+                    res.push(Vec2::from_usize(i, j));
+                }
+            }
+        }
+        res
     }
 }
 
