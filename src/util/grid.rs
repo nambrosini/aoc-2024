@@ -21,10 +21,6 @@ pub trait Parse {
     fn parse(input: &str) -> Self;
 }
 
-pub trait FromNum {
-    fn from_u32(input: &str) -> Self;
-}
-
 impl<T> Find<T> for Grid<T>
 where
     T: Eq,
@@ -84,11 +80,17 @@ impl<T> Inbound<&Vec2> for Grid<T> {
     }
 }
 
-impl<T: From<char>> Parse for Grid<T> {
+impl Parse for Grid<char> {
+    fn parse(input: &str) -> Self {
+        input.lines().map(|c| c.chars().collect()).collect()
+    }
+}
+
+impl Parse for Grid<i64> {
     fn parse(input: &str) -> Self {
         input
             .lines()
-            .map(|c| c.chars().map(|c| c.into()).collect())
+            .map(|l| l.chars().map(|c| c.to_digit(10).unwrap() as i64).collect())
             .collect()
     }
 }

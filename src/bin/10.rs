@@ -1,21 +1,14 @@
 use std::collections::HashSet;
 
 use advent_of_code::util::{
-    grid::{Find, Grid, Inbound},
+    grid::{Find, Grid, Inbound, Parse},
     position::Vec2,
 };
 
 advent_of_code::solution!(10);
 
-fn parse(input: &str) -> Grid<i64> {
-    input
-        .lines()
-        .map(|l| l.chars().map(|c| c.to_digit(10).unwrap() as i64).collect())
-        .collect()
-}
-
 pub fn part_one(input: &str) -> Option<i64> {
-    let grid = parse(input);
+    let grid = Grid::parse(input);
     let starts = grid.find_all(0);
     let mut sum = 0;
     for start in starts {
@@ -46,7 +39,7 @@ fn trailheads(grid: &Grid<i64>, start: Vec2, visited: &mut HashSet<Vec2>) {
 }
 
 pub fn part_two(input: &str) -> Option<i64> {
-    let grid = parse(input);
+    let grid = Grid::parse(input);
     let starts = grid.find_all(0);
     let mut sum = 0;
     for start in starts {
