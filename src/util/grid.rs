@@ -21,6 +21,10 @@ pub trait Parse {
     fn parse(input: &str) -> Self;
 }
 
+pub trait FromNum {
+    fn from_u32(input: &str) -> Self;
+}
+
 impl<T> Find<T> for Grid<T>
 where
     T: Eq,
