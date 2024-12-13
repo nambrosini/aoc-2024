@@ -83,6 +83,14 @@ impl Add<Vec2> for Vec2 {
     }
 }
 
+impl Add<i64> for Vec2 {
+    type Output = Self;
+
+    fn add(self, rhs: i64) -> Self::Output {
+        v(self.x + rhs, self.y + rhs)
+    }
+}
+
 impl Sub<Vec2> for Vec2 {
     type Output = Self;
 

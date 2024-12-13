@@ -54,6 +54,8 @@ pub fn part_one(input: &str) -> Option<i64> {
     Some(sum)
 }
 
+const PRIZE_INCREASE: i64 = 10000000000000;
+
 pub fn part_two(input: &str) -> Option<i64> {
     let machines = parse(input);
 
@@ -62,10 +64,7 @@ pub fn part_two(input: &str) -> Option<i64> {
         .map(|machine| Machine {
             a: machine.a,
             b: machine.b,
-            prize: v(
-                machine.prize.x + 10000000000000,
-                machine.prize.y + 10000000000000,
-            ),
+            prize: machine.prize + PRIZE_INCREASE,
         })
         .collect();
 
