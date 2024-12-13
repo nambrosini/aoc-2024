@@ -33,7 +33,7 @@ fn is_loop(grid: &Grid<char>, start: &Vec2, block: &Vec2) -> bool {
 
     loop {
         visited.insert((current, dir));
-        let next = current + dir.into();
+        let next = current + dir;
         if !grid.inbound(&next) {
             break;
         }
@@ -56,7 +56,7 @@ fn find_visited(grid: &Grid<char>) -> HashSet<Vec2> {
 
     loop {
         visited.insert(current);
-        let next = current + dir.into();
+        let next = current + dir;
         if !grid.inbound(&next) {
             break;
         }

@@ -1,6 +1,8 @@
 use std::ops::{Add, Mul, Sub};
 use std::str::FromStr;
 
+use super::direction::Direction;
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Default)]
 pub struct Vec2 {
     pub x: i64,
@@ -104,5 +106,14 @@ impl Mul<i64> for Vec2 {
 
     fn mul(self, rhs: i64) -> Self::Output {
         v(self.x * rhs, self.y * rhs)
+    }
+}
+
+impl Add<Direction> for Vec2 {
+    type Output = Vec2;
+
+    fn add(self, rhs: Direction) -> Self::Output {
+        let dir: Vec2 = rhs.into();
+        self + dir
     }
 }
