@@ -13,6 +13,18 @@ pub enum Rotation {
     Counter,
 }
 
+impl From<Vec2> for Direction {
+    fn from(value: Vec2) -> Self {
+        match value {
+            Vec2 { x: -1, y: 0 } => Direction::Up,
+            Vec2 { x: 1, y: 0 } => Direction::Down,
+            Vec2 { x: 0, y: -1 } => Direction::Left,
+            Vec2 { x: 0, y: 1 } => Direction::Right,
+            _ => unreachable!(),
+        }
+    }
+}
+
 impl From<Direction> for Vec2 {
     fn from(dir: Direction) -> Vec2 {
         match dir {

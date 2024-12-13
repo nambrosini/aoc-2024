@@ -1,5 +1,5 @@
 use crate::util::position::Vec2;
-use std::fmt::Display;
+use std::{collections::HashMap, fmt::Display};
 
 pub type Grid<T> = Vec<Vec<T>>;
 
@@ -19,6 +19,10 @@ pub trait Inbound<T> {
 
 pub trait Parse {
     fn parse(input: &str) -> Self;
+}
+
+pub trait ToMap<T> {
+    fn to_map(&self) -> HashMap<Vec2, T>;
 }
 
 impl<T> Find<T> for Grid<T>
@@ -92,5 +96,20 @@ impl Parse for Grid<i64> {
             .lines()
             .map(|l| l.chars().map(|c| c.to_digit(10).unwrap() as i64).collect())
             .collect()
+    }
+}
+
+impl<T> ToMap<T> for Grid<T>
+where
+    T: Clone,
+{
+    fn to_map(&self) -> HashMap<Vec2, T> {
+        let mut map = HashMap::new();
+        for (i, row) in self.iter().enumerate() {
+            for (j, e) in row.iter().enumerate() {
+                map.insert(Vec2::from_usize(i, j), e.clone());
+            }
+        }
+        map
     }
 }
