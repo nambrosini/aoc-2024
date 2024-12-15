@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use std::str::FromStr;
 
 use super::direction::Direction;
@@ -101,6 +101,29 @@ impl Sub<Vec2> for Vec2 {
     }
 }
 
+impl Sub<Direction> for Vec2 {
+    type Output = Self;
+
+    fn sub(self, rhs: Direction) -> Self::Output {
+        let dir: Vec2 = rhs.into();
+        self - dir
+    }
+}
+
+impl SubAssign<Vec2> for Vec2 {
+    fn sub_assign(&mut self, rhs: Vec2) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+    }
+}
+
+impl SubAssign<Direction> for Vec2 {
+    fn sub_assign(&mut self, rhs: Direction) {
+        let dir: Vec2 = rhs.into();
+        *self -= dir;
+    }
+}
+
 impl Mul<i64> for Vec2 {
     type Output = Vec2;
 
@@ -115,5 +138,20 @@ impl Add<Direction> for Vec2 {
     fn add(self, rhs: Direction) -> Self::Output {
         let dir: Vec2 = rhs.into();
         self + dir
+    }
+}
+
+impl AddAssign<Vec2> for Vec2 {
+    fn add_assign(&mut self, rhs: Vec2) {
+        self.x = self.x + rhs.x;
+        self.y = self.y + rhs.y;
+    }
+}
+
+impl AddAssign<Direction> for Vec2 {
+    fn add_assign(&mut self, rhs: Direction) {
+        let dir: Vec2 = rhs.into();
+        self.x = self.x + dir.x;
+        self.y = self.y + dir.y;
     }
 }

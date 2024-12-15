@@ -9,12 +9,12 @@ pub trait Print {
 }
 
 pub trait Find<T> {
-    fn find(&self, value: T) -> Vec2;
-    fn find_all(&self, value: T) -> Vec<Vec2>;
+    fn find(&self, value: &T) -> Vec2;
+    fn find_all(&self, value: &T) -> Vec<Vec2>;
 }
 
-pub trait Inbound<T> {
-    fn inbound(&self, point: T) -> bool;
+pub trait Inbound {
+    fn inbound(&self, point: &Vec2) -> bool;
 }
 
 pub trait Parse {
@@ -25,13 +25,38 @@ pub trait ToMap<T> {
     fn to_map(&self) -> HashMap<Vec2, T>;
 }
 
+pub trait Read<T> {
+    fn get(&self, v: &Vec2) -> T;
+}
+
+pub trait Write<T> {
+    fn set(&mut self, v: &Vec2, val: T);
+}
+
+impl<T> Write<T> for Grid<T> {
+    fn set(&mut self, v: &Vec2, val: T) {
+        if self.inbound(v) {
+            self[v.x()][v.y()] = val;
+        }
+    }
+}
+
+impl<T> Read<T> for Grid<T>
+where
+    T: Copy,
+{
+    fn get(&self, v: &Vec2) -> T {
+        self[v.x()][v.y()]
+    }
+}
+
 impl<T> Find<T> for Grid<T>
 where
     T: Eq,
 {
-    fn find(&self, value: T) -> Vec2 {
+    fn find(&self, value: &T) -> Vec2 {
         for (i, row) in self.iter().enumerate() {
-            if let Some(j) = row.iter().position(|e| e == &value) {
+            if let Some(j) = row.iter().position(|e| e == value) {
                 return Vec2::from_usize(i, j);
             }
         }
@@ -39,11 +64,11 @@ where
         unreachable!()
     }
 
-    fn find_all(&self, value: T) -> Vec<Vec2> {
+    fn find_all(&self, value: &T) -> Vec<Vec2> {
         let mut res = Vec::new();
         for (i, row) in self.iter().enumerate() {
             for (j, e) in row.iter().enumerate() {
-                if e == &value {
+                if e == value {
                     res.push(Vec2::from_usize(i, j));
                 }
             }
@@ -78,7 +103,7 @@ where
     }
 }
 
-impl<T> Inbound<&Vec2> for Grid<T> {
+impl<T> Inbound for Grid<T> {
     fn inbound(&self, pos: &Vec2) -> bool {
         pos.x >= 0 && pos.x < self.len() as i64 && pos.y >= 0 && pos.y < self[0].len() as i64
     }

@@ -9,7 +9,7 @@ advent_of_code::solution!(10);
 
 pub fn part_one(input: &str) -> Option<i64> {
     let grid = Grid::parse(input);
-    let starts = grid.find_all(0);
+    let starts = grid.find_all(&0);
     let mut sum = 0;
     for start in starts {
         let mut set = HashSet::new();
@@ -40,7 +40,7 @@ fn trailheads(grid: &Grid<i64>, start: Vec2, visited: &mut HashSet<Vec2>) {
 
 pub fn part_two(input: &str) -> Option<i64> {
     let grid = Grid::parse(input);
-    let starts = grid.find_all(0);
+    let starts = grid.find_all(&0);
     let mut sum = 0;
     for start in starts {
         let v = distinct_trailheads(&grid, start);

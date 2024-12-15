@@ -15,8 +15,8 @@ pub fn part_one(input: &str) -> Option<i64> {
         .collect();
 
     let mut set = HashSet::new();
-    for symbol in &symbols {
-        let positions = grid.find_all(**symbol);
+    for symbol in symbols {
+        let positions = grid.find_all(symbol);
         let combi: Vec<_> = positions.iter().permutations(2).collect();
         for c in combi {
             let dist = c[0].distance_2d(c[1]);
@@ -41,8 +41,8 @@ pub fn part_two(input: &str) -> Option<usize> {
         .collect();
 
     let mut set = HashSet::new();
-    for symbol in &symbols {
-        let positions = grid.find_all(**symbol);
+    for symbol in symbols {
+        let positions = grid.find_all(symbol);
         let combi: Vec<_> = positions.iter().permutations(2).collect();
         for c in combi {
             let dist = c[0].distance_2d(c[1]);
@@ -50,7 +50,7 @@ pub fn part_two(input: &str) -> Option<usize> {
             while grid.inbound(&current) {
                 new_grid[current.x()][current.y()] = '#';
                 set.insert(current);
-                current = current + dist;
+                current += dist;
             }
         }
     }

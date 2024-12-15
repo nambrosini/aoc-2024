@@ -17,7 +17,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
 pub fn part_two(input: &str) -> Option<usize> {
     let grid = Grid::parse(input);
-    let start = grid.find(START);
+    let start = grid.find(&START);
     let visited: HashSet<Vec2> = find_visited(&grid)
         .iter()
         .filter(|x| x != &&start)
@@ -50,7 +50,7 @@ fn is_loop(grid: &Grid<char>, start: &Vec2, block: &Vec2) -> bool {
 }
 
 fn find_visited(grid: &Grid<char>) -> HashSet<Vec2> {
-    let mut current = grid.find(START);
+    let mut current = grid.find(&START);
     let mut dir = Direction::Up;
     let mut visited = HashSet::new();
 

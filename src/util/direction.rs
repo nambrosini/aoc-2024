@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use super::position::Vec2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -11,6 +13,8 @@ pub enum Direction {
 pub enum Rotation {
     Clock,
     Counter,
+    None,
+    Opposite,
 }
 
 impl From<Vec2> for Direction {
@@ -51,6 +55,22 @@ impl Direction {
                 Direction::Left => Direction::Down,
                 Direction::Right => Direction::Up,
             },
+            Rotation::None => *self,
+            Rotation::Opposite => match self {
+                Direction::Up => Direction::Down,
+                Direction::Down => Direction::Up,
+                Direction::Left => Direction::Right,
+                Direction::Right => Direction::Left,
+            },
         }
+    }
+}
+
+impl Mul<i64> for Direction {
+    type Output = Vec2;
+
+    fn mul(self, rhs: i64) -> Self::Output {
+        let v: Vec2 = self.into();
+        v * rhs
     }
 }
