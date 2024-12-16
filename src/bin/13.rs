@@ -1,4 +1,4 @@
-use advent_of_code::util::position::{v, Vec2};
+use aoc_util::position::{v, Vec2};
 use regex::Regex;
 
 advent_of_code::solution!(13);

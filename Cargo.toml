@@ -28,5 +28,6 @@ pico-args = "0.5.0"
 tinyjson = "2.5.1"
 
 # Solution dependencies
+aoc-util = { path = "../aoc-util" }
 itertools = "0.13.0"
 regex = "1.11.1"

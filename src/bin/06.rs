@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use advent_of_code::util::{
+use aoc_util::{
     direction::{Direction, Rotation},
     grid::{Find, Grid, Inbound, Parse},
     position::Vec2,
@@ -41,7 +41,7 @@ fn is_loop(grid: &Grid<char>, start: &Vec2, block: &Vec2) -> bool {
             return true;
         }
         if grid[next.x()][next.y()] == '#' || &next == block {
-            dir = dir.rotate(Rotation::Clock);
+            dir = dir.rotate(&Rotation::Clock);
             continue;
         }
         current = next;
@@ -61,7 +61,7 @@ fn find_visited(grid: &Grid<char>) -> HashSet<Vec2> {
             break;
         }
         if grid[next.x()][next.y()] == '#' {
-            dir = dir.rotate(Rotation::Clock);
+            dir = dir.rotate(&Rotation::Clock);
             continue;
         }
         current = next;

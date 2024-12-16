@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use advent_of_code::util::{
+use aoc_util::{
     grid::{Find, Grid, Inbound, Parse},
     position::Vec2,
 };

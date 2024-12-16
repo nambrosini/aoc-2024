@@ -1,4 +1,4 @@
-use advent_of_code::util::{
+use aoc_util::{
     grid::{Grid, Inbound, Parse},
     position::Vec2,
     vecs::SortedVec,

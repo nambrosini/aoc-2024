@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use advent_of_code::util::grid::{Find, Grid, Inbound, Parse};
+use aoc_util::grid::{Find, Grid, Inbound, Parse};
 use itertools::Itertools;
 
 advent_of_code::solution!(8);

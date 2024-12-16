@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use advent_of_code::util::{
+use aoc_util::{
     direction::Direction,
     grid::{Find, Grid, Parse, Read, Write},
 };

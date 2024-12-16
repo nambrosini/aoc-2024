@@ -1,4 +1,4 @@
-use advent_of_code::util::position::Vec2;
+use aoc_util::position::Vec2;
 use regex::Regex;
 
 advent_of_code::solution!(14);
