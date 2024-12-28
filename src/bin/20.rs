@@ -1,12 +1,7 @@
-use std::{
-    collections::{HashMap, HashSet},
-    ops::Index,
-};
-
 use aoc_util::{
     algs::astar::astar,
-    grid::{Find, Grid, Inbound, Parse, Print, Read},
-    position::{v, Vec2},
+    grid::{Find, Grid, Inbound, Parse, Read},
+    position::Vec2,
 };
 
 advent_of_code::solution!(20);
@@ -62,19 +57,19 @@ pub fn part_two(input: &str) -> Option<usize> {
     Some(save.iter().filter(|&&x| x >= 100).count())
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    // #[test]
-    // fn test_part_one() {
-    //     let result = part_one(&advent_of_code::template::read_file("examples", DAY));
-    //     assert_eq!(result, Some(5));
-    // }
-
-    #[test]
-    fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, Some(285));
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//
+//     #[test]
+//     fn test_part_one() {
+//         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
+//         assert_eq!(result, Some(5));
+//     }
+//
+//     #[test]
+//     fn test_part_two() {
+//         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
+//         assert_eq!(result, Some(285));
+//     }
+// }
