@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 advent_of_code::solution!(22);
 
+type Map = HashMap<Vec<i64>, i64>;
+
 fn parse(input: &str) -> Vec<i64> {
     input.lines().map(|x| x.parse().unwrap()).collect()
 }
@@ -17,33 +19,41 @@ pub fn part_one(input: &str) -> Option<i64> {
 }
 
 pub fn part_two(input: &str) -> Option<i64> {
+    solve_two(input, 2000)
+}
+
+fn solve_two(input: &str, amount: usize) -> Option<i64> {
     let input = parse(input);
     let mut map = HashMap::<Vec<i64>, i64>::new();
 
     for secret in input {
-        get_bananas_seq(&mut map, secret, 2001);
+        let m = get_bananas_seq(secret, amount);
+        m.iter().for_each(|(k, v)| {
+            let entry = map.entry(k.to_vec()).or_insert(0);
+            *entry += v;
+        });
     }
 
     map.values().max().copied()
 }
 
-fn get_bananas_seq(map: &mut HashMap<Vec<i64>, i64>, secret: i64, amount: usize) {
+fn get_bananas_seq(secret: i64, amount: usize) -> Map {
+    let mut map: Map = HashMap::new();
     let seq = get_sequence(secret, amount);
     let differences = get_diffs(&seq);
     for (i, w) in differences.windows(4).enumerate() {
-        if w == &[-2,1,-1,3] {
-            println!("{}", seq[i]);
+        if !map.contains_key(w) {
+            map.insert(w.to_vec(), seq[i+4]);
         }
-        let entry = map.entry(w.to_vec()).or_insert(0);
-        *entry += seq[i];
     }
+    map
 }
 
 fn get_sequence(secret: i64, amount: usize) -> Vec<i64> {
     let mut secret = secret;
     let mut v = Vec::with_capacity(2001);
 
-    for _ in 0..amount {
+    for _ in 0..=amount {
         v.push(secret % 10);
         secret = evolve(secret);
     }
@@ -105,7 +115,7 @@ mod tests {
     #[test]
     fn test_sequence() {
         let secret = 123;
-        let sequence = get_sequence(secret, 9);
+        let sequence = get_sequence(secret, 10);
         let expected = [3, 0, 6, 5, 4, 4, 6, 4, 4, 2];
 
         assert_eq!(sequence, expected);
@@ -114,7 +124,7 @@ mod tests {
     #[test]
     fn test_diffs() {
         let secret = 123;
-        let sequence = get_sequence(secret, 9);
+        let sequence = get_sequence(secret, 10);
         let diffs = get_diffs(&sequence);
         let expected = [-3, 6, -1, -1, 0, 2, -2, 0, -2];
 
@@ -124,7 +134,7 @@ mod tests {
     #[test]
     fn banana_seq_123() {
         let secret = 123;
-        let map: HashMap<Vec<i64>, i64> = [
+        let map: Map = [
             (Vec::<i64>::from([-3, 6, -1, -1]), 3i64),
             (Vec::<i64>::from([6, -1, -1, 0]), 0i64),
             (Vec::<i64>::from([-1, -1, 0, 2]), 6i64),
@@ -134,9 +144,17 @@ mod tests {
         ].iter().cloned().collect();
 
         let mut result = HashMap::new();
-        get_bananas_seq(&mut result, secret, 10);
+        get_bananas_seq(secret, 10);
 
         assert_eq!(result, map);
+    }
+
+    #[test]
+    fn test_part_two_123() {
+        let secret = "123";
+        let result = solve_two(secret, 10);
+
+        assert_eq!(result, Some(6));
     }
 
     #[test]
